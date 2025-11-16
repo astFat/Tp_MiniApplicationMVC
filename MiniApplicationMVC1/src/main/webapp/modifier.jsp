@@ -50,7 +50,6 @@
 
                 <div>
                     <button type="submit" class="btn text-white" style="background-color: #5B9BD5;">Modifier</button>
-                    <a href="clients" class="btn btn-secondary">Annuler</a>
                 </div>
             </form>
         </div>
