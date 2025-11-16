@@ -16,9 +16,11 @@ import java.util.List;
 @WebServlet("/clients")
 public class ClientServlet extends HttpServlet {
 
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/db_clients";
+	private static final long serialVersionUID = 1L;
+	
+	private static final String URL = "jdbc:mysql://127.0.0.1:3306/db_clients";
     private static final String USER = "root";
-    private static final String PASSWORD = "root_pwd";
+    private static final String PASSWORD = "";
    
     private Connection getConnection() throws SQLException {
         try {
@@ -28,17 +30,20 @@ public class ClientServlet extends HttpServlet {
             throw new SQLException("Driver MySQL introuvable", e);
         }
     }
- 
+  
     private List<Client> listerClients(String recherche) {
+        if (recherche == null) recherche = "";
+
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM client WHERE nom LIKE ? ORDER BY id";
-        
+
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setString(1, "%" + (recherche != null ? recherche : "") + "%");
+
+            ps.setString(1, "%" + recherche + "%");
+
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 clients.add(new Client(
                     rs.getInt("id"),
@@ -47,11 +52,14 @@ public class ClientServlet extends HttpServlet {
                     rs.getInt("age")
                 ));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return clients;
     }
+
     
     private Client getClientParId(int id) {
         Client client = null;
@@ -182,5 +190,5 @@ public class ClientServlet extends HttpServlet {
         }
       
         response.sendRedirect("clients");
-    }
+    }
 }
